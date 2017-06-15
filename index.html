@@ -41,7 +41,7 @@ function slideshow(pictures, idx) {
 	imageURLOrig = pictures[idx];
 	imageURLNew = prefixReplace + imageURLOrig.substring(imageURLOrig.indexOf(prefixMatch) + prefixMatch.length, imageURLOrig.indexOf(suffixMatch));
 	//alert("slideshow: " + idx + ";");
-	$("#imageFrame").html("<img id='image' src='" + imageURLNew + "' />");
+	$("#imageFrame").html("<img style='max-height:100%;max-width:100%' id='image' src='" + imageURLNew + "' />");
 	
 	nextIdx = idx + 1;
 	if (nextIdx >= pictures.length) {
@@ -61,7 +61,7 @@ function slideshow(pictures, idx) {
   <div class="row">
   	<div class="col-md-12"><button onclick="go()">Go</button></div>
   </div>
-  <div id="imageFrame">Where is the image?</div>
+  <div id="imageFrame" class="col-md-12">Where is the image?</div>
 </div>
 
 </body>
