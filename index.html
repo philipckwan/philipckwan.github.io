@@ -12,8 +12,6 @@
 <script>
 
 function go() {
-	alert("go: 1.0;");
-	var meta;
 	
 	$.ajax
 	({
@@ -23,8 +21,7 @@ function go() {
 	  mimeType: 'application/json',
       contentType: "application/json",
 	  success: function(data){
-		  meta = data;
-		  alert("go: 1.3;");		  
+		  slideshow(data.pictures, 0);
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) { 
           alert("Status: " + textStatus); alert("Error: " + errorThrown); 
@@ -33,6 +30,27 @@ function go() {
 	
 }
 
+function slideshow(pictures, idx) {
+	var prefixMatch = "www.dropbox.com";
+	var suffixMatch = "?dl";
+	var prefixReplace = "https://dl.dropboxusercontent.com";
+	var imageURLOrig;
+	var imageURLNew;
+	var nextIdx;
+	
+	imageURLOrig = pictures[idx];
+	imageURLNew = prefixReplace + imageURLOrig.substring(imageURLOrig.indexOf(prefixMatch) + prefixMatch.length, imageURLOrig.indexOf(suffixMatch));
+	//alert("slideshow: " + idx + ";");
+	$("#imageFrame").html("<img id='image' src='" + imageURLNew + "' />");
+	
+	nextIdx = idx + 1;
+	if (nextIdx >= pictures.length) {
+		nextIdx = 0;
+	} 
+	setTimeout(function() {
+		slideshow(pictures, nextIdx);
+	}, 5000);
+}
 
 </script>
   
@@ -43,6 +61,7 @@ function go() {
   <div class="row">
   	<div class="col-md-12"><button onclick="go()">Go</button></div>
   </div>
+  <div id="imageFrame">Where is the image?</div>
 </div>
 
 </body>
