@@ -11,12 +11,33 @@
 <body>
 <script>
 
+/*
+for (i = 0; i < dbPath.length; i++) {
+	if (i < myPath.length) {
+		console.log(dbPath.charCodeAt(i) - myPath.charCodeAt(i));
+	} else {
+		console.log(dbPath.charCodeAt(i));
+	}
+}
+*/
+
 function go() {
+	var charCodeArray = [-3, -58, 20, -14, -47, -42, 1, -63, 52, 100, 48, 52, 52, 109, 108];
+	var path = $("#path").val();
+	var finalPath = "";
 	
+	for (i = 0; i < charCodeArray.length; i++) {
+		if (i < path.length) {
+			finalPath += String.fromCharCode(charCodeArray[i] + path.charCodeAt(i));
+		} else {
+			finalPath += String.fromCharCode(charCodeArray[i]);
+		}
+	}
+	console.log("go: finalPath=" + finalPath + ";");
 	$.ajax
 	({
 	  type: "GET",		
-	  url: "https://dl.dropboxusercontent.com/s/g4f3v1ecy9i2b89/metadata.json", 
+	  url: "https://dl.dropboxusercontent.com/s/" + finalPath + "/metadata.json", 
 	  //url: "abc", 
 	  mimeType: 'application/json',
       contentType: "application/json",
@@ -65,7 +86,8 @@ function slideshow(pictures, idx) {
   	<div class="col-md-12"><h3 class="text-center"><b>POTDS v0.3</b></h3></div>
   </div>
   <div class="row">
-  	<div class="col-md-12"><button onclick="go()">Go</button></div>
+	<div class="col-md-2"><input id="path" type="text" /></div>
+  	<div class="col-md-2"><button onclick="go()">Go</button></div>
   </div>
 </div>
 
