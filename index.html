@@ -7,6 +7,20 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<style>
+div.fill-screen {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    text-align: center;
+}
+img.make-it-fit {
+    max-width: 99%;
+    max-height: 99%;
+}
+</style>
 </head>
 <body>
 <script>
@@ -42,7 +56,8 @@ function go() {
 	  mimeType: 'application/json',
       contentType: "application/json",
 	  success: function(data){
-		  slideshow(data.pictures, 0);
+		$(".willHide").hide();
+		slideshow(data.pictures, 0);
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) { 
           alert("Status: " + textStatus); alert("Error: " + errorThrown); 
@@ -62,7 +77,7 @@ function slideshow(pictures, idx) {
 	imageURLOrig = pictures[idx];
 	imageURLNew = prefixReplace + imageURLOrig.substring(imageURLOrig.indexOf(prefixMatch) + prefixMatch.length, imageURLOrig.indexOf(suffixMatch));
 	//alert("slideshow: " + idx + ";");
-	$("#imageFrame").html("<img style='max-height:100%;max-width:100%' id='image' src='" + imageURLNew + "' />");
+	$("#imageFrame").html("<img class='make-it-fit' id='image' src='" + imageURLNew + "' />");
 	
 	nextIdx = idx + 1;
 	if (nextIdx >= pictures.length) {
@@ -80,12 +95,12 @@ function slideshow(pictures, idx) {
 	<div class="col-md-12">&nbsp</div>
   </div>
   <div class="row">
-	<div id="imageFrame" class="col-md-12" />
+	<div id="imageFrame" class="col-md-12 fill-screen" />
   </div>
-  <div class="row">
-  	<div class="col-md-12"><h3 class="text-center"><b>POTDS v0.3</b></h3></div>
+  <div class="row willHide">
+  	<div  class="col-md-12"><h3 class="text-center"><b>POTDS v0.3</b></h3></div>
   </div>
-  <div class="row">
+  <div class="row willHide">
 	<div class="col-md-2"><input id="path" type="text" /></div>
   	<div class="col-md-2"><button onclick="go()">Go</button></div>
   </div>
