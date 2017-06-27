@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>POTDS Portal</title>
+<title>TOTDS Portal</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -36,46 +36,92 @@ for (i = 0; i < dbPath.length; i++) {
 */
 
 function go() {
-	var charCodeArray = [-3, -58, 20, -14, -47, -42, 1, -63, 52, 100, 48, 52, 52, 109, 108];
+	var targets = [[-3, -58, 20, -14, -47, -42, 1, -63, 52, 100, 48, 52, 52, 109, 108], [10, -56, -61, -14, -51, 102, 120, 48, 112, 121, 102, 122, 108, 51, 112]];
 	var path = $("#path").val();
+	
+	connect(path, targets, 0);
+}
+
+function connect(path, targets, idx) {
+	var target = targets[idx];
 	var finalPath = "";
 	
-	for (i = 0; i < charCodeArray.length; i++) {
+	console.log("connect: path:[" + path + "], target:[" + target + "];");
+	for (i = 0; i < target.length; i++) {
 		if (i < path.length) {
-			finalPath += String.fromCharCode(charCodeArray[i] + path.charCodeAt(i));
+			finalPath += String.fromCharCode(target[i] + path.charCodeAt(i));
 		} else {
-			finalPath += String.fromCharCode(charCodeArray[i]);
+			finalPath += String.fromCharCode(target[i]);
 		}
 	}
-	console.log("go: finalPath=" + finalPath + ";");
+	
+	console.log("connect: finalPath=" + finalPath + ";");
 	$.ajax
 	({
 	  type: "GET",		
-	  url: "https://dl.dropboxusercontent.com/s/" + finalPath + "/potds-metadata.json", 
+	  url: "https://dl.dropboxusercontent.com/s/" + finalPath + "/totds-metadata.json", 
+	  //url: "abc", 
+	  mimeType: 'application/json',
+      contentType: "application/json",
+	  success: function(data){
+		console.log("connect: successfully connect to app:[" + data.id + "];");
+		$(".willHide").hide();
+		if (data.id == "potds") {
+			slideshow(data.pictures, 0);
+		} else if (data.id == "iotds") {
+			pickIdea(data.ideas);
+		}
+	  },
+	  error: function(XMLHttpRequest, textStatus, errorThrown) { 
+		var nextIdx = idx + 1;
+		if (nextIdx >= targets.length) {
+			alert("connect: ERROR - Status: " + textStatus); alert("Error: " + errorThrown); 
+		} else {
+			connect(path, targets, nextIdx);
+		}
+      } 
+	});	
+}
+
+function convertDBPath(path) {
+	var prefixMatch = "www.dropbox.com";
+	var suffixMatch = "?dl";
+	var prefixReplace = "https://dl.dropboxusercontent.com";
+	
+	var pathNew = prefixReplace + path.substring(path.indexOf(prefixMatch) + prefixMatch.length, path.indexOf(suffixMatch));
+	return pathNew;
+}
+
+function pickIdea(ideas) {
+	console.log("pickIdea: 1.0;");
+	var pickIdx = Math.floor(Math.random() * ideas.length);
+	var ideaPathNew = convertDBPath(ideas[pickIdx]);
+	
+	console.log("pickIdea: ideaPathNew:[" + ideaPathNew + "];");
+	$.ajax
+	({
+	  type: "GET",		
+	  url: ideaPathNew, 
 	  //url: "abc", 
 	  mimeType: 'application/json',
       contentType: "application/json",
 	  success: function(data){
 		$(".willHide").hide();
-		slideshow(data.pictures, 0);
+		$("#imageFrame").html("<h3 class='text-center'><b>" + data.idea + "</b></h3>");
 	  },
 	  error: function(XMLHttpRequest, textStatus, errorThrown) { 
-          alert("Status: " + textStatus); alert("Error: " + errorThrown); 
+		alert("pickIdea: ERROR - Status: " + textStatus); alert("Error: " + errorThrown); 
       } 
-	});
+	});	
 	
 }
 
 function slideshow(pictures, idx) {
-	var prefixMatch = "www.dropbox.com";
-	var suffixMatch = "?dl";
-	var prefixReplace = "https://dl.dropboxusercontent.com";
-	var imageURLOrig;
 	var imageURLNew;
 	var nextIdx;
 	
 	imageURLOrig = pictures[idx];
-	imageURLNew = prefixReplace + imageURLOrig.substring(imageURLOrig.indexOf(prefixMatch) + prefixMatch.length, imageURLOrig.indexOf(suffixMatch));
+	imageURLNew = convertDBPath(pictures[idx]);
 	//alert("slideshow: " + idx + ";");
 	$("#imageFrame").html("<img class='make-it-fit' id='image' src='" + imageURLNew + "' />");
 	
@@ -98,7 +144,7 @@ function slideshow(pictures, idx) {
 	<div id="imageFrame" class="col-md-12 fill-screen" />
   </div>
   <div class="row willHide">
-  	<div  class="col-md-12"><h3 class="text-center"><b>POTDS v0.3</b></h3></div>
+  	<div  class="col-md-12"><h3 class="text-center"><b>TOTDS v0.5</b></h3></div>
   </div>
   <div class="row willHide">
 	<div class="col-md-2"><input id="path" type="text" /></div>
