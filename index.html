@@ -67,7 +67,7 @@ function connect(path, targets, idx) {
 		console.log("connect: successfully connect to app:[" + data.id + "];");
 		$(".willHide").hide();
 		if (data.id == "potds") {
-			slideshow(data.pictures, 0);
+			slideshow(data.pictures, 0, data.delay);
 		} else if (data.id == "iotds") {
 			pickIdea(data.ideas);
 		}
@@ -116,7 +116,7 @@ function pickIdea(ideas) {
 	
 }
 
-function slideshow(pictures, idx) {
+function slideshow(pictures, idx, delay) {
 	var imageURLNew;
 	var nextIdx;
 	
@@ -130,8 +130,8 @@ function slideshow(pictures, idx) {
 		nextIdx = 0;
 	} 
 	setTimeout(function() {
-		slideshow(pictures, nextIdx);
-	}, 5000);
+		slideshow(pictures, nextIdx, delay);
+	}, delay);
 }
 
 </script>
