@@ -1,0 +1,14 @@
+https://www.dropbox.com/s/uqqkb7fszjiu2qc/79947silhouette01.jpg?dl=0
+
+to
+
+https://dl.dropboxusercontent.com/s/uqqkb7fszjiu2qc/79947silhouette01.jpg
+
+-todo
+
+done-allow input of the path to metadata.json, to prevent outsiders from getting access to it
+-polls metadata when a cycle of pictures is finished? that will automatically update the photos
+-preset the files in Dropbox so that the URL path won't change
+ -will this cause problem with the Web Client not update the picture?
+ 
+-add "Ideas of the Day"
