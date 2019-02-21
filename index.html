@@ -37,12 +37,22 @@ for (i = 0; i < dbPath.length; i++) {
 
 function go() {
 	var targets = [[9, 1, 20, 8, 5, 23, -57, -1, 115, 57, 99, 119, 97, 51, 116], [10, -56, -61, -14, -51, 102, 120, 48, 112, 121, 102, 122, 108, 51, 112]];
-	var path = $("#path").val();
+	var input = $("#path").val();
 	
-	connect(path, targets, 0);
+	// now support extra argument at the end, so need to split the string with whitespaces
+	var inputSplit = input.split(" ");
+	var path = inputSplit[0];
+	var skip = inputSplit[1];
+	
+	if (skip == null) {
+		skip = 0;
+	} else {
+		skip = Number(skip);
+	}
+	connect(path, targets, 0, skip);
 }
 
-function connect(path, targets, idx) {
+function connect(path, targets, idx, skip) {
 	var target = targets[idx];
 	var finalPath = "";
 	
@@ -67,7 +77,7 @@ function connect(path, targets, idx) {
 		console.log("connect: successfully connect to app:[" + data.id + "];");
 		$(".willHide").hide();
 		if (data.id == "potds") {
-			slideshow(data.pictures, 0, data.delay);
+			slideshow(data.pictures, skip, data.delay);
 		} else if (data.id == "iotds") {
 			pickIdea(data.ideas);
 		}
@@ -144,7 +154,7 @@ function slideshow(pictures, idx, delay) {
 	<div id="imageFrame" class="col-md-12 fill-screen" />
   </div>
   <div class="row willHide">
-  	<div  class="col-md-12"><h3 class="text-center"><b>TOTDS v0.5</b></h3></div>
+  	<div  class="col-md-12"><h3 class="text-center"><b>TOTDS v0.6</b></h3></div>
   </div>
   <div class="row willHide">
 	<div class="col-md-2"><input id="path" type="text" /></div>
